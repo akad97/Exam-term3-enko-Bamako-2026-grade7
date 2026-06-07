@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade 7 Sciences — Term 3 Exam · June 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1e7a3c; --green-light: #e8f5ee; --green-mid: #2d9e52;
+    --ink: #1a1a1a; --ink-soft: #444; --ink-muted: #888;
+    --line: #d8d8d8; --bg: #f9f7f4; --white: #ffffff;
+    --amber: #d97706; --red: #c0392b; --blue: #1a5276;
+    --shadow: 0 2px 16px rgba(0,0,0,.08); --shadow-lg: 0 8px 40px rgba(0,0,0,.13);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+
+  /* HEADER */
+  .site-header{background:var(--white);border-bottom:3px solid var(--green);padding:0 2rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;height:68px;box-shadow:var(--shadow)}
+  .logo-wrap{display:flex;align-items:center;gap:.75rem}
+  .logo-circle{width:36px;height:36px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;font-weight:700;color:#fff;font-size:.75rem}
+  .logo-text{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--ink)}
+  .logo-sub{font-size:.75rem;color:var(--ink-muted);display:block}
+  .header-center h1{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;text-align:center;color:var(--ink)}
+  .header-center p{font-size:.75rem;color:var(--ink-muted);text-align:center}
+  #timer-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+  #timer{font-family:'DM Mono',monospace;font-size:1.55rem;font-weight:500;color:var(--green);letter-spacing:.08em;transition:color .4s}
+  #timer.warn{color:var(--amber)}
+  #timer.urgent{color:var(--red);animation:pulse 1s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+  #timer-label{font-size:.65rem;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.06em}
+
+  /* PROGRESS */
+  #progress-bar-wrap{background:var(--line);height:4px}
+  #progress-bar{height:4px;background:var(--green);transition:width .5s;width:0%}
+
+  /* MAIN */
+  main{max-width:860px;margin:0 auto;padding:2rem 1.5rem 4rem}
+
+  /* STUDENT INFO */
+  .info-card{background:var(--white);border-radius:12px;padding:1.5rem 2rem;margin-bottom:2rem;box-shadow:var(--shadow);border:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  .info-field label{display:block;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-muted);margin-bottom:.35rem}
+  .info-field input{width:100%;border:none;border-bottom:2px solid var(--line);background:transparent;font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.3rem 0;color:var(--ink);outline:none;transition:border-color .2s}
+  .info-field input:focus{border-color:var(--green)}
+
+  /* CRITERION SECTIONS */
+  .criterion{background:var(--white);border-radius:14px;box-shadow:var(--shadow);border:1px solid var(--line);margin-bottom:2.5rem;overflow:hidden}
+  .criterion-header{display:flex;align-items:center;gap:1rem;padding:1.2rem 1.75rem;border-bottom:2px solid var(--line)}
+  .crit-badge{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:#fff;flex-shrink:0}
+  .crit-a .crit-badge{background:#1e7a3c}
+  .crit-b .crit-badge{background:#1a5276}
+  .crit-c .crit-badge{background:#7d3c98}
+  .crit-d .crit-badge{background:#c0392b}
+  .crit-title h2{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700}
+  .crit-title p{font-size:.8rem;color:var(--ink-muted);font-style:italic;margin-top:.15rem}
+  .crit-marks{margin-left:auto;background:var(--green-light);color:var(--green);font-weight:700;font-size:.85rem;padding:.4rem .9rem;border-radius:20px}
+  .criterion-body{padding:1.5rem 1.75rem;display:flex;flex-direction:column;gap:2rem}
+
+  /* QUESTIONS */
+  .q-label{font-size:.95rem;font-weight:600;color:var(--ink);margin-bottom:.85rem;line-height:1.5}
+  .q-label .marks-tag{display:inline-block;background:var(--green-light);color:var(--green);font-size:.7rem;font-weight:700;padding:.15rem .5rem;border-radius:10px;margin-left:.5rem;vertical-align:middle}
+
+  /* MCQ */
+  .choices{display:flex;flex-direction:column;gap:.5rem}
+  .choice-label{display:flex;align-items:center;gap:.75rem;padding:.65rem .9rem;border-radius:8px;border:1.5px solid var(--line);cursor:pointer;transition:all .2s;font-size:.92rem}
+  .choice-label:hover{border-color:var(--green);background:var(--green-light)}
+  .choice-label input[type=radio]{accent-color:var(--green);width:16px;height:16px}
+  .choice-label.selected{border-color:var(--green);background:var(--green-light);font-weight:500}
+
+  /* LONG ANSWER */
+  .long-answer textarea{width:100%;min-height:120px;border:1.5px solid var(--line);border-radius:8px;padding:.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:.92rem;color:var(--ink);resize:vertical;background:#fdfcfa;transition:border-color .2s;outline:none;line-height:1.6}
+  .long-answer textarea:focus{border-color:var(--green);background:var(--white)}
+  .char-count{font-size:.72rem;color:var(--ink-muted);text-align:right;margin-top:.3rem}
+
+  /* FILL-IN-THE-BLANK */
+  .fill-block{background:#faf9f7;border:1.5px solid var(--line);border-radius:10px;padding:1.2rem 1.4rem;display:flex;flex-direction:column;gap:.45rem}
+  .fill-section-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#7d3c98;margin-bottom:.2rem}
+  .fill-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+  .fill-prefix{font-size:.88rem;color:var(--ink-soft);min-width:180px}
+  .fill-sym{font-family:'DM Mono',monospace;font-size:.95rem;color:var(--ink);white-space:nowrap}
+  .fill-sym-sm{font-family:'DM Mono',monospace;font-size:1rem;color:var(--ink-muted);padding:0 .1rem}
+  .fill-unit{font-size:.82rem;color:var(--ink-muted);font-style:italic}
+  .fill-input{border:none;border-bottom:2px solid #b39ddb;background:transparent;font-family:'DM Mono',monospace;font-size:.9rem;color:var(--ink);padding:.2rem .4rem;outline:none;width:120px;transition:border-color .2s}
+  .fill-input:focus{border-color:#7d3c98}
+  .fill-input.fill-wide{width:260px}
+  .fill-input.fill-sm{width:70px}
+
+  .divider{border:none;border-top:1px dashed var(--line)}
+
+  /* SUBMIT */
+  .submit-wrap{text-align:center;margin-top:1rem}
+  #submit-btn{background:var(--green);color:#fff;border:none;padding:1rem 3rem;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:all .2s;letter-spacing:.02em;box-shadow:0 4px 20px rgba(30,122,60,.3)}
+  #submit-btn:hover{background:var(--green-mid);transform:translateY(-1px)}
+
+  /* RESULTS */
+  #results{display:none;background:var(--white);border-radius:14px;box-shadow:var(--shadow-lg);border:2px solid var(--green);padding:2.5rem 2rem;margin-top:2.5rem}
+  #results h2{font-family:'Playfair Display',serif;font-size:1.6rem;text-align:center;color:var(--green);margin-bottom:.4rem}
+  #results .subtitle{text-align:center;color:var(--ink-muted);font-size:.88rem;margin-bottom:2rem}
+  .results-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;margin-bottom:2rem}
+  .result-card{border-radius:10px;border:1.5px solid var(--line);padding:1.2rem 1.4rem;text-align:center}
+  .result-card .rc-letter{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700}
+  .result-card .rc-name{font-size:.75rem;color:var(--ink-muted);margin-bottom:.5rem}
+  .result-card .rc-score{font-family:'DM Mono',monospace;font-size:1.8rem;font-weight:500;color:var(--ink)}
+  .result-card .rc-max{font-size:.8rem;color:var(--ink-muted)}
+  .ib-result{background:var(--green);color:#fff;border-radius:12px;padding:2rem;text-align:center;margin-bottom:1.5rem}
+  .ib-result .ib-label{font-size:.85rem;opacity:.8;text-transform:uppercase;letter-spacing:.07em}
+  .ib-result .ib-grade{font-family:'Playfair Display',serif;font-size:5rem;line-height:1;font-weight:700}
+  .ib-result .ib-descriptor{font-size:1rem;opacity:.9;margin-top:.3rem}
+  .ib-table{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:1rem}
+  .ib-table th{background:var(--green-light);color:var(--green);font-weight:700;padding:.5rem .8rem;text-align:left}
+  .ib-table td{padding:.5rem .8rem;border-bottom:1px solid var(--line)}
+  .ib-table tr.active-row td{background:#fff8e1;font-weight:600}
+
+  /* TOAST */
+  #toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(4rem);background:var(--ink);color:#fff;padding:.75rem 1.5rem;border-radius:8px;font-size:.88rem;opacity:0;transition:all .4s;z-index:999;pointer-events:none}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* WARNING OVERLAY */
+  #warning-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);backdrop-filter:blur(6px);align-items:center;justify-content:center}
+  #warning-overlay.show{display:flex}
+  #warning-box{background:#fff;border-radius:16px;max-width:480px;width:90%;padding:3rem 2.5rem;text-align:center;border-top:6px solid #c0392b;box-shadow:0 20px 60px rgba(0,0,0,.4);animation:popIn .35s cubic-bezier(.175,.885,.32,1.275)}
+  @keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+  #warning-icon{font-size:3.5rem;margin-bottom:.75rem}
+  #warning-box h2{font-family:'Playfair Display',serif;font-size:1.7rem;color:#c0392b;margin-bottom:.75rem}
+  #warning-box p{font-size:.95rem;color:#444;line-height:1.6}
+
+  /* VIOLATION BANNER */
+  #violation-banner{background:#fdf2f2;border:2px solid #c0392b;color:#c0392b;border-radius:10px;padding:1rem 1.5rem;margin:1rem auto;max-width:860px;font-size:.9rem;text-align:center}
+
+  @media(max-width:600px){
+    .info-card,.results-grid{grid-template-columns:1fr}
+    .header-center h1{font-size:.9rem}
+    #timer{font-size:1.2rem}
+    .fill-input.fill-wide{width:100%}
+    .fill-prefix{min-width:100%}
+  }
+</style>
+</head>
+<body>
+
+<!-- WARNING OVERLAY -->
+<div id="warning-overlay">
+  <div id="warning-box">
+    <div id="warning-icon">⚠️</div>
+    <h2>Exam Terminated</h2>
+    <p>You navigated away from the exam page. Your exam has been automatically closed and your answers have been locked.</p>
+    <div id="warning-meta" style="margin-top:1rem;font-size:.82rem;color:#c0392b;font-weight:600;"></div>
+  </div>
+</div>
+
+<!-- VIOLATION BANNER -->
+<div id="violation-banner" style="display:none;">
+  ⚠️ <strong>Integrity violation detected.</strong> You left the exam tab — your exam has been automatically submitted and locked.
+</div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="logo-wrap">
+    <div class="logo-circle">enko</div>
+    <div>
+      <span class="logo-text">Bamako</span>
+      <span class="logo-sub">Sciences · Grade 7</span>
+    </div>
+  </div>
+  <div class="header-center">
+    <h1>Term 3 Exam — June 2026</h1>
+    <p>MYP Sciences · Physics · 4 Criteria · 32 Marks Total</p>
+  </div>
+  <div id="timer-wrap">
+    <span id="timer-label">Time remaining</span>
+    <span id="timer">2:00:00</span>
+  </div>
+</header>
+
+<div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+
+<main>
+
+  <!-- STUDENT INFO -->
+  <div class="info-card">
+    <div class="info-field">
+      <label>Full Name / ID</label>
+      <input type="text" id="student-name" placeholder="Enter your full name">
+    </div>
+    <div class="info-field">
+      <label>Date</label>
+      <input type="text" id="student-date" placeholder="DD / MM / 2026">
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- CRITERION A — 8 marks (4 MCQ × 2 marks)  -->
+  <!-- ══════════════════════════════════════════ -->
+  <section class="criterion crit-a">
+    <div class="criterion-header">
+      <div class="crit-badge">A</div>
+      <div class="crit-title">
+        <h2>Criterion A — Knowing and Understanding</h2>
+        <p>Recall and apply scientific knowledge, terminology, and formulas.</p>
+      </div>
+      <div class="crit-marks">8 marks</div>
+    </div>
+    <div class="criterion-body">
+      <p style="font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-muted);">Multiple Choice Questions — 2 marks each</p>
+
+      <!-- MCQ 1 -->
+      <div class="question-block">
+        <p class="q-label">1. A cyclist travels 3 km in 5 minutes. What is her average speed in m s⁻¹? <span class="marks-tag">2 marks</span></p>
+        <div class="choices" data-q="a_mc1" data-answer="C">
+          <label class="choice-label"><input type="radio" name="a_mc1" value="A"> A. 0.6 m s⁻¹</label>
+          <label class="choice-label"><input type="radio" name="a_mc1" value="B"> B. 36 m s⁻¹</label>
+          <label class="choice-label"><input type="radio" name="a_mc1" value="C"> C. 10 m s⁻¹</label>
+          <label class="choice-label"><input type="radio" name="a_mc1" value="D"> D. 600 m s⁻¹</label>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- MCQ 2 -->
+      <div class="question-block">
+        <p class="q-label">2. What is the key difference between speed and velocity? <span class="marks-tag">2 marks</span></p>
+        <div class="choices" data-q="a_mc2" data-answer="B">
+          <label class="choice-label"><input type="radio" name="a_mc2" value="A"> A. Speed is measured in m s⁻¹ but velocity is measured in km h⁻¹</label>
+          <label class="choice-label"><input type="radio" name="a_mc2" value="B"> B. Velocity includes direction (it is a vector), whereas speed does not</label>
+          <label class="choice-label"><input type="radio" name="a_mc2" value="C"> C. Speed is always greater than velocity for the same object</label>
+          <label class="choice-label"><input type="radio" name="a_mc2" value="D"> D. They are the same quantity — different words for the same thing</label>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- MCQ 3 -->
+      <div class="question-block">
+        <p class="q-label">3. Newton's second law states that Force = mass × acceleration. A 60 kg skateboarder accelerates at 2 m s⁻². What net force acts on the skateboarder? <span class="marks-tag">2 marks</span></p>
+        <div class="choices" data-q="a_mc3" data-answer="C">
+          <label class="choice-label"><input type="radio" name="a_mc3" value="A"> A. 30 N</label>
+          <label class="choice-label"><input type="radio" name="a_mc3" value="B"> B. 62 N</label>
+          <label class="choice-label"><input type="radio" name="a_mc3" value="C"> C. 120 N</label>
+          <label class="choice-label"><input type="radio" name="a_mc3" value="D"> D. 120 kg</label>
+        </div>
+      </div>
+      <hr class="divider">
+
+      <!-- MCQ 4 -->
+      <div class="question-block">
+        <p class="q-label">4. A train travels at a constant speed of 25 m s⁻¹ for 4 minutes. What distance does it cover? <span class="marks-tag">2 marks</span></p>
+        <div class="choices" data-q="a_mc4" data-answer="B">
+          <label class="choice-label"><input type="radio" name="a_mc4" value="A"> A. 100 m</label>
+          <label class="choice-label"><input type="radio" name="a_mc4" value="B"> B. 6 000 m</label>
+          <label class="choice-label"><input type="radio" name="a_mc4" value="C"> C. 1 500 m</label>
+          <label class="choice-label"><input type="radio" name="a_mc4" value="D"> D. 25 m</label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- CRITERION B — 8 marks                     -->
+  <!-- ══════════════════════════════════════════ -->
+  <section class="criterion crit-b">
+    <div class="criterion-header">
+      <div class="crit-badge">B</div>
+      <div class="crit-title">
+        <h2>Criterion B — Inquiring and Designing</h2>
+        <p>Formulate research questions, identify variables, and design scientific investigations.</p>
+      </div>
+      <div class="crit-marks">8 marks</div>
+    </div>
+    <div class="criterion-body">
+
+      <!-- B Q1 -->
+      <div class="question-block long-answer">
+        <p class="q-label">Q1. A student notices that heavier boxes are harder to push across the floor. She wants to investigate this using the formula F = ma. Write a research question she could investigate, identify the independent and dependent variables, and describe how she could control other variables. <span class="marks-tag">4 marks</span></p>
+        <textarea id="b_q1" placeholder="Write your research question and experimental design here..." rows="7" oninput="updateChar(this,'b_q1_count')"></textarea>
+        <p class="char-count" id="b_q1_count">0 characters</p>
+      </div>
+
+      <hr class="divider">
+
+      <!-- B Q2 — Speed-time graph analysis -->
+      <div class="question-block">
+        <p class="q-label">Q2. A student records the speed of a toy car every 2 seconds during an experiment and draws the following speed-time table: <span class="marks-tag">4 marks</span></p>
+
+        <table class="atom-table">
+          <thead><tr><th>Time (s)</th><th>0</th><th>2</th><th>4</th><th>6</th><th>8</th></tr></thead>
+          <tbody>
+            <tr><td>Speed (m/s)</td><td>0</td><td>4</td><td>8</td><td>12</td><td>16</td></tr>
+          </tbody>
+        </table>
+
+        <p style="font-size:.85rem;font-weight:600;color:var(--ink-soft);margin:.8rem 0 .5rem;">(a) Identify the pattern in the speed as time increases. <span style="color:var(--ink-muted);font-weight:400;">(1 mark)</span></p>
+        <div class="long-answer">
+          <textarea id="b_q2a" placeholder="Describe the pattern you observe in the data..." rows="3" oninput="updateChar(this,'b_q2a_count')"></textarea>
+          <p class="char-count" id="b_q2a_count">0 characters</p>
+        </div>
+
+        <p style="font-size:.85rem;font-weight:600;color:var(--ink-soft);margin:.8rem 0 .5rem;">(b) Using the pattern, predict the speed of the car at t = 10 s. Justify your answer. <span style="color:var(--ink-muted);font-weight:400;">(1 mark)</span></p>
+        <div class="long-answer">
+          <textarea id="b_q2b" placeholder="State your prediction and explain your reasoning..." rows="3" oninput="updateChar(this,'b_q2b_count')"></textarea>
+          <p class="char-count" id="b_q2b_count">0 characters</p>
+        </div>
+
+        <p style="font-size:.85rem;font-weight:600;color:var(--ink-soft);margin:.8rem 0 .5rem;">(c) The student concludes: <em>"The car's speed doubles every second."</em> Explain why this conclusion is incorrect and suggest how the student could improve their analysis. <span style="color:var(--ink-muted);font-weight:400;">(2 marks)</span></p>
+        <div class="long-answer">
+          <textarea id="b_q2c" placeholder="Explain the error in the conclusion and suggest an improvement..." rows="4" oninput="updateChar(this,'b_q2c_count')"></textarea>
+          <p class="char-count" id="b_q2c_count">0 characters</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- CRITERION C — 8 marks (fill-in-the-blank) -->
+  <!-- ══════════════════════════════════════════ -->
+  <section class="criterion crit-c">
+    <div class="criterion-header">
+      <div class="crit-badge">C</div>
+      <div class="crit-title">
+        <h2>Criterion C — Processing and Evaluating</h2>
+        <p>Apply formulas, process data, and evaluate scientific results.</p>
+      </div>
+      <div class="crit-marks">8 marks</div>
+    </div>
+    <div class="criterion-body">
+
+      <!-- C Q1 — Speed & conversion -->
+      <div class="question-block">
+        <p class="q-label">Q1. A cyclist travels 90 metres in 15 seconds. <span class="marks-tag">4 marks</span></p>
+
+        <p style="font-size:.85rem;font-weight:600;color:var(--ink-soft);margin-bottom:.7rem;">(a) Calculate the speed of the cyclist in m/s. <span style="color:var(--ink-muted);font-weight:400;">(2 marks)</span></p>
+        <div class="fill-block">
+          <p class="fill-section-title">Given:</p>
+          <div class="fill-row">
+            <span class="fill-prefix">Distance</span>
+            <span class="fill-sym">d =</span>
+            <input class="fill-input fill-sm" id="c1a_d" type="text" placeholder="___">
+            <span class="fill-unit">m</span>
+          </div>
+          <div class="fill-row">
+            <span class="fill-prefix">Time</span>
+            <span class="fill-sym">t =</span>
+            <input class="fill-input fill-sm" id="c1a_t" type="text" placeholder="___">
+            <span class="fill-unit">s</span>
+          </div>
+          <p class="fill-section-title" style="margin-top:.8rem;">Formula:</p>
+          <div class="fill-row">
+            <input class="fill-input fill-wide" id="c1a_formula" type="text" placeholder="Write the formula here…">
+          </div>
+          <p class="fill-section-title" style="margin-top:.8rem;">Calculation:</p>
+          <div class="fill-row">
+            <span class="fill-sym">v =</span>
+            <input class="fill-input fill-sm" id="c1a_num" type="text" placeholder="___">
+            <span class="fill-sym-sm">÷</span>
+            <input class="fill-input fill-sm" id="c1a_den" type="text" placeholder="___">
+          </div>
+          <p class="fill-section-title" style="margin-top:.8rem;">Answer:</p>
+          <div class="fill-row">
+            <span class="fill-sym">v =</span>
+            <input class="fill-input" id="c1a_ans" type="text" placeholder="___">
+            <span class="fill-unit">m/s</span>
+          </div>
+        </div>
+
+        <p style="font-size:.85rem;font-weight:600;color:var(--ink-soft);margin:1rem 0 .7rem;">(b) Convert this speed to km/h. <span style="color:var(--ink-muted);font-weight:400;">(2 marks)</span></p>
+        <div class="fill-block">
+          <p class="fill-section-title">Conversion factor:</p>
+          <div class="fill-row">
+            <span class="fill-sym">1 m/s =</span>
+            <input class="fill-input fill-sm" id="c1b_factor" type="text" placeholder="___">
+            <span class="fill-unit">km/h</span>
+          </div>
+          <p class="fill-section-title" style="margin-top:.8rem;">Calculation:</p>
+          <div class="fill-row">
+            <input class="fill-input fill-sm" id="c1b_speed" type="text" placeholder="___">
+            <span class="fill-sym-sm">×</span>
+            <input class="fill-input fill-sm" id="c1b_cf" type="text" placeholder="___">
+            <span class="fill-sym-sm">=</span>
+            <input class="fill-input" id="c1b_result" type="text" placeholder="___">
+            <span class="fill-unit">km/h</span>
+          </div>
+          <p class="fill-section-title" style="margin-top:.8rem;">Answer:</p>
+          <div class="fill-row">
+            <span class="fill-sym">Speed =</span>
+            <input class="fill-input" id="c1b_ans" type="text" placeholder="___">
+            <span class="fill-unit">km/h</span>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- C Q2 — Acceleration -->
+      <div class="question-block">
+        <p class="q-label">Q2. A car increases its speed from 10 m/s to 30 m/s in 5 seconds. <span class="marks-tag">4 marks</span></p>
+
+        <p style="font-size:.85rem;font-weight:600;color:var(--ink-soft);margin-bottom:.7rem;">(a) Calculate the acceleration of the car. <span style="color:var(--ink-muted);font-weight:400;">(2 marks)</span></p>
+        <div class="fill-block">
+          <p class="fill-section-title">Given:</p>
+          <div class="fill-row">
+            <span class="fill-prefix">Initial speed</span>
+            <span class="fill-sym">u =</span>
+            <input class="fill-input fill-sm" id="c2a_u" type="text" placeholder="___">
+            <span class="fill-unit">m/s</span>
+          </div>
+          <div class="fill-row">
+            <span class="fill-prefix">Final speed</span>
+            <span class="fill-sym">v =</span>
+            <input class="fill-input fill-sm" id="c2a_v" type="text" placeholder="___">
+            <span class="fill-unit">m/s</span>
+          </div>
+          <div class="fill-row">
+            <span class="fill-prefix">Time</span>
+            <span class="fill-sym">t =</span>
+            <input class="fill-input fill-sm" id="c2a_t" type="text" placeholder="___">
+            <span class="fill-unit">s</span>
+          </div>
+          <p class="fill-section-title" style="margin-top:.8rem;">Formula:</p>
+          <div class="fill-row">
+            <input class="fill-input fill-wide" id="c2a_formula" type="text" placeholder="Write the formula here…">
+          </div>
+          <p class="fill-section-title" style="margin-top:.8rem;">Calculation:</p>
+          <div class="fill-row">
+            <span class="fill-sym">a = (</span>
+            <input class="fill-input fill-sm" id="c2a_num1" type="text" placeholder="___">
+            <span class="fill-sym-sm">−</span>
+            <input class="fill-input fill-sm" id="c2a_num2" type="text" placeholder="___">
+            <span class="fill-sym-sm">) ÷</span>
+            <input class="fill-input fill-sm" id="c2a_den" type="text" placeholder="___">
+          </div>
+          <p class="fill-section-title" style="margin-top:.8rem;">Answer:</p>
+          <div class="fill-row">
+            <span class="fill-sym">a =</span>
+            <input class="fill-input" id="c2a_ans" type="text" placeholder="___">
+            <span class="fill-unit">m/s²</span>
+          </div>
+        </div>
+
+        <p style="font-size:.85rem;font-weight:600;color:var(--ink-soft);margin:1rem 0 .7rem;">(b) A bus travelling at 240 km in 4 hours increases its speed to 90 km/h over 3 hours. Calculate the acceleration of the bus. <span style="color:var(--ink-muted);font-weight:400;">(1 mark)</span></p>
+        <div class="fill-block">
+          <p class="fill-section-title">Given (calculate initial speed first):</p>
+          <div class="fill-row">
+            <span class="fill-prefix">Initial speed of bus</span>
+            <span class="fill-sym">u =</span>
+            <input class="fill-input" id="c2b_u" type="text" placeholder="240÷4 = ___">
+            <span class="fill-unit">km/h</span>
+          </div>
+          <div class="fill-row">
+            <span class="fill-prefix">Final speed</span>
+            <span class="fill-sym">v =</span>
+            <input class="fill-input fill-sm" id="c2b_v" type="text" placeholder="___">
+            <span class="fill-unit">km/h</span>
+          </div>
+          <div class="fill-row">
+            <span class="fill-prefix">Time</span>
+            <span class="fill-sym">t =</span>
+            <input class="fill-input fill-sm" id="c2b_t" type="text" placeholder="___">
+            <span class="fill-unit">h</span>
+          </div>
+          <p class="fill-section-title" style="margin-top:.8rem;">Answer:</p>
+          <div class="fill-row">
+            <span class="fill-sym">a =</span>
+            <input class="fill-input" id="c2b_ans" type="text" placeholder="___">
+            <span class="fill-unit">km/h²</span>
+          </div>
+        </div>
+
+        <p style="font-size:.85rem;font-weight:600;color:var(--ink-soft);margin:1rem 0 .5rem;">(c) Which has a greater acceleration, the car or the bus? What could explain this difference? <span style="color:var(--ink-muted);font-weight:400;">(1 mark)</span></p>
+        <div class="long-answer">
+          <textarea id="c2c_ans" placeholder="State which has greater acceleration and explain why..." rows="4" oninput="updateChar(this,'c2c_count')"></textarea>
+          <p class="char-count" id="c2c_count">0 characters</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- CRITERION D — 8 marks (open-ended)        -->
+  <!-- ══════════════════════════════════════════ -->
+  <section class="criterion crit-d">
+    <div class="criterion-header">
+      <div class="crit-badge">D</div>
+      <div class="crit-title">
+        <h2>Criterion D — Reflecting on the Impacts of Science</h2>
+        <p>Discuss the application, implications, and real-world significance of scientific concepts.</p>
+      </div>
+      <div class="crit-marks">8 marks</div>
+    </div>
+    <div class="criterion-body">
+
+      <div class="question-block long-answer">
+        <p class="q-label">Q1. Cars and buses accelerate quickly in cities to keep up with traffic. Using your knowledge of F = ma, explain why heavier vehicles require more fuel to accelerate at the same rate as lighter ones. <span class="marks-tag">4 marks</span></p>
+        <textarea id="d_q1" placeholder="Use F = ma to explain the relationship between mass, force, and fuel consumption..." rows="8" oninput="updateChar(this,'d_q1_count')"></textarea>
+        <p class="char-count" id="d_q1_count">0 characters</p>
+      </div>
+
+      <div class="question-block long-answer">
+        <p class="q-label">Q2. High-speed trains can travel at over 300 km/h. Discuss <strong>one positive</strong> and <strong>one negative</strong> impact of high-speed transport on society and the environment. Use scientific ideas in your answer. <span class="marks-tag">4 marks</span></p>
+        <textarea id="d_q2" placeholder="Positive impact: ...&#10;&#10;Negative impact: ..." rows="10" oninput="updateChar(this,'d_q2_count')"></textarea>
+        <p class="char-count" id="d_q2_count">0 characters</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SUBMIT -->
+  <div class="submit-wrap">
+    <button id="submit-btn" onclick="submitExam()">Submit Exam &amp; View Results</button>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+    <h2>Exam Results</h2>
+    <p class="subtitle" id="results-name"></p>
+    <div class="results-grid" id="criteria-scores"></div>
+    <div class="ib-result">
+      <p class="ib-label">IB MYP Grade</p>
+      <p class="ib-grade" id="ib-grade-num">—</p>
+      <p class="ib-descriptor" id="ib-grade-desc">—</p>
+    </div>
+    <p style="font-size:.85rem;color:var(--ink-muted);font-weight:600;margin-bottom:.5rem;">IB Grade Conversion Table</p>
+    <table class="ib-table" id="ib-table">
+      <thead><tr><th>Total Marks (out of 32)</th><th>Percentage</th><th>IB Grade</th><th>Descriptor</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p style="font-size:.75rem;color:var(--ink-muted);margin-top:1.2rem;text-align:center;">
+      Note: Criterion A (MCQ) is auto-graded. Criteria B, C (written/comparative parts), and D require teacher review.
+    </p>
+  </div>
+
+</main>
+
+<div id="toast"></div>
+
+<script>
+// ── TIMER ──────────────────────────────────────
+let totalSeconds = 2 * 60 * 60;
+const timerEl = document.getElementById('timer');
+const interval = setInterval(() => {
+  totalSeconds--;
+  if (totalSeconds <= 0) {
+    clearInterval(interval);
+    timerEl.textContent = '0:00:00';
+    showToast('⏰ Time is up! Please submit your exam.');
+    return;
+  }
+  const h = Math.floor(totalSeconds / 3600);
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  const s = totalSeconds % 60;
+  timerEl.textContent = `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  timerEl.className = totalSeconds < 300 ? 'urgent' : totalSeconds < 900 ? 'warn' : '';
+  const elapsed = 7200 - totalSeconds;
+  document.getElementById('progress-bar').style.width = (elapsed / 7200 * 100) + '%';
+}, 1000);
+
+// ── PAGE LEAVE DETECTION ───────────────────────
+let examSubmitted = false;
+let examLocked = false;
+
+function lockExamDueToViolation() {
+  if (examLocked || examSubmitted) return;
+  examLocked = true;
+  clearInterval(interval);
+  document.querySelector('.info-card') && (document.querySelector('.info-card').style.display = 'none');
+  document.querySelectorAll('.criterion').forEach(s => s.style.display = 'none');
+  const sw = document.querySelector('.submit-wrap');
+  if (sw) sw.style.display = 'none';
+  document.getElementById('violation-banner').style.display = 'block';
+  const overlay = document.getElementById('warning-overlay');
+  document.getElementById('warning-meta').textContent =
+    `Violation recorded at ${new Date().toLocaleTimeString()} — Exam auto-submitted.`;
+  overlay.classList.add('show');
+  setTimeout(() => {
+    overlay.classList.remove('show');
+    examSubmitted = false;
+    submitExam(true);
+  }, 6000);
+}
+
+window.addEventListener('beforeunload', (e) => {
+  if (examSubmitted || examLocked) return;
+  e.preventDefault();
+  e.returnValue = 'Leaving this page will automatically terminate your exam.';
+});
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && !examSubmitted && !examLocked) lockExamDueToViolation();
+});
+window.addEventListener('blur', () => {
+  if (!examSubmitted && !examLocked) lockExamDueToViolation();
+});
+
+// ── MCQ INTERACTION ─────────────────────────────
+document.querySelectorAll('.choices').forEach(group => {
+  group.querySelectorAll('input[type=radio]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      group.querySelectorAll('.choice-label').forEach(l => l.classList.remove('selected'));
+      radio.closest('.choice-label').classList.add('selected');
+    });
+  });
+});
+
+// ── CHAR COUNT ──────────────────────────────────
+function updateChar(el, countId) {
+  const n = el.value.length;
+  document.getElementById(countId).textContent = n + ' character' + (n !== 1 ? 's' : '');
+}
+
+// ── TOAST ───────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── IB CONVERSION (out of 32) ────────────────────
+const TOTAL_MARKS = 32;
+const IB_BANDS = [
+  { min: 0,  max: 4,  grade: 1, desc: 'Minimal achievement' },
+  { min: 5,  max: 9,  grade: 2, desc: 'Very limited achievement' },
+  { min: 10, max: 14, grade: 3, desc: 'Limited achievement' },
+  { min: 15, max: 18, grade: 4, desc: 'Adequate achievement' },
+  { min: 19, max: 23, grade: 5, desc: 'Substantial achievement' },
+  { min: 24, max: 27, grade: 6, desc: 'Very good achievement' },
+  { min: 28, max: 32, grade: 7, desc: 'Excellent achievement' },
+];
+
+function getIBGrade(total) {
+  return IB_BANDS.find(b => total >= b.min && total <= b.max) || IB_BANDS[0];
+}
+
+// ── SUBMIT ──────────────────────────────────────
+function submitExam(silent = false) {
+  if (examSubmitted) return;
+  if (!silent && !confirm('Are you sure you want to submit? You will not be able to go back to your answers.')) return;
+  examSubmitted = true;
+  clearInterval(interval);
+
+  // ── Criterion A: auto-grade (8 marks, 2 per question) ──
+  const mcqs = [
+    { id: 'a_mc1', answer: 'C' },
+    { id: 'a_mc2', answer: 'B' },
+    { id: 'a_mc3', answer: 'C' },
+    { id: 'a_mc4', answer: 'B' },
+  ];
+  let aScore = 0;
+  mcqs.forEach(q => {
+    const sel = document.querySelector(`input[name="${q.id}"]:checked`);
+    if (sel && sel.value === q.answer) aScore += 2;
+  });
+
+  // ── Criterion B: indicative (8 marks) ──
+  function hasContent(id) {
+    const el = document.getElementById(id);
+    return el && el.value.trim().length > 20;
+  }
+  let bScore = 0;
+  if (hasContent('b_q1')) bScore += 4;
+  if (hasContent('b_q2a')) bScore += 1;
+  if (hasContent('b_q2b')) bScore += 1;
+  if (hasContent('b_q2c')) bScore += 2;
+
+  // ── Criterion C: fill-in-the-blank (8 marks) ──
+  function filled(id) {
+    const el = document.getElementById(id);
+    return el && el.value.trim().length > 0;
+  }
+  let cScore = 0;
+  // Q1a (2 marks): given + formula + calc + answer
+  if (filled('c1a_d') && filled('c1a_t')) cScore += 0.5;
+  if (filled('c1a_formula')) cScore += 0.5;
+  if (filled('c1a_num') && filled('c1a_den')) cScore += 0.5;
+  if (filled('c1a_ans')) cScore += 0.5;
+  // Q1b (2 marks): conversion
+  if (filled('c1b_factor')) cScore += 0.5;
+  if (filled('c1b_speed') && filled('c1b_cf')) cScore += 0.5;
+  if (filled('c1b_result')) cScore += 0.5;
+  if (filled('c1b_ans')) cScore += 0.5;
+  // Q2a (2 marks): acceleration car
+  if (filled('c2a_u') && filled('c2a_v') && filled('c2a_t')) cScore += 0.5;
+  if (filled('c2a_formula')) cScore += 0.5;
+  if (filled('c2a_num1') && filled('c2a_num2') && filled('c2a_den')) cScore += 0.5;
+  if (filled('c2a_ans')) cScore += 0.5;
+  // Q2b (1 mark): bus acceleration
+  if (filled('c2b_u') && filled('c2b_ans')) cScore += 1;
+  // Q2c (1 mark): comparison
+  if (hasContent('c2c_ans')) cScore += 1;
+  cScore = Math.round(cScore);
+
+  // ── Criterion D: indicative (8 marks) ──
+  let dScore = 0;
+  if (hasContent('d_q1')) dScore += 4;
+  if (hasContent('d_q2')) dScore += 4;
+
+  const total = aScore + bScore + cScore + dScore;
+  const ib = getIBGrade(total);
+
+  // ── HIDE exam, show results ──
+  document.querySelector('.info-card').style.display = 'none';
+  document.querySelectorAll('.criterion').forEach(s => s.style.display = 'none');
+  const sw = document.querySelector('.submit-wrap');
+  if (sw) sw.style.display = 'none';
+  timerEl.style.color = 'var(--ink-muted)';
+
+  const name = document.getElementById('student-name').value || 'Student';
+  document.getElementById('results-name').textContent =
+    `${name} · Total: ${total} / ${TOTAL_MARKS} · ${Math.round(total / TOTAL_MARKS * 100)}%`;
+
+  const crits = [
+    { letter: 'A', name: 'Knowing & Understanding', score: aScore, max: 8, color: '#1e7a3c' },
+    { letter: 'B', name: 'Inquiring & Designing',   score: bScore, max: 8, color: '#1a5276', note: true },
+    { letter: 'C', name: 'Processing & Evaluating', score: cScore, max: 8, color: '#7d3c98', note: true },
+    { letter: 'D', name: 'Reflecting on Impacts',   score: dScore, max: 8, color: '#c0392b', note: true },
+  ];
+
+  document.getElementById('criteria-scores').innerHTML = crits.map(c => `
+    <div class="result-card" style="border-color:${c.color}30;border-width:2px;">
+      <div class="rc-letter" style="color:${c.color}">${c.letter}</div>
+      <div class="rc-name">${c.name}</div>
+      <div class="rc-score" style="color:${c.color}">${c.score}<span class="rc-max"> / ${c.max}</span></div>
+      ${c.note ? '<div style="font-size:.7rem;color:#aaa;margin-top:.3rem;">*Indicative — teacher review required</div>' : ''}
+    </div>
+  `).join('');
+
+  document.getElementById('ib-grade-num').textContent = ib.grade;
+  document.getElementById('ib-grade-desc').textContent = ib.desc;
+
+  const tbody = document.querySelector('#ib-table tbody');
+  tbody.innerHTML = IB_BANDS.map(b => `
+    <tr class="${total >= b.min && total <= b.max ? 'active-row' : ''}">
+      <td>${b.min} – ${b.max}</td>
+      <td>${Math.round(b.min / TOTAL_MARKS * 100)}% – ${Math.round(b.max / TOTAL_MARKS * 100)}%</td>
+      <td><strong>${b.grade}</strong></td>
+      <td>${b.desc}</td>
+    </tr>
+  `).join('');
+
+  const resultsEl = document.getElementById('results');
+  resultsEl.style.display = 'block';
+  setTimeout(() => resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  if (!silent) showToast('✅ Exam submitted — answers are now locked.');
+}
+</script>
+</body>
+</html>
